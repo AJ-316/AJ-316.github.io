@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <link rel="icon" href="./favicon.png" type="image/png">
+    <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> 
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png"> -->
     Test Page
 </head>
 
 <body>
     Hello Page!
+
+    <script>
+        function loadContent() {
+            fetch('content.html')  // Make sure 'content.html' is in the same directory
+                .then(response => response.text())
+                .then(data => {
+                    // Insert content into the #gradin div
+                    document.body.innerHTML = data;
+                })
+                .catch(error => {
+                    console.error("Error loading content:", error);
+                });
+        }
+
+        loadContent();
+    </script>
 </body>
+
 </html>
