@@ -3,20 +3,18 @@
 
 <head>
     <link rel="icon" href="./favicon.png" type="image/png">
-    <!-- <link rel="icon" href="./favicon.ico" type="image/x-icon"> 
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png"> -->
-    Test Page
+    <link rel="stylesheet" href="./style.css">
+
+    <title>Test Page</title>
 </head>
 
 <body>
-    Hello Page!
-
+    Hello World
     <script>
         function loadContent() {
-            fetch('content.html')  // Make sure 'content.html' is in the same directory
+            fetch('content.html')
                 .then(response => response.text())
                 .then(data => {
-                    // Insert content into the #gradin div
                     document.body.innerHTML = data;
                 })
                 .catch(error => {
