@@ -1,27 +1,223 @@
 @import "tailwindcss";
 
-@keyframes gradient-bg {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
+:root {
+  --color-accent: 83,234,253; /* #53eafd */
+  --color-accent-dark: 0,146,184; /* #0092b8 */
+  --color-interact: 255,100,103; /* #ff6467 */
+  --color-interact-dark: 231,0,11; /* #e7000b */
+}
 
-.port-bg-gradient {
+@layer base {
+  html {
+    @apply scroll-smooth font-[Montserrat] text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-4xl 2xl:text-4xl;
+  }
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.port-bg-gradient-a {
+	width: full;
+	height: full;
+	background: radial-gradient(
+			circle at 150%,
+			#100B2A, #1E1937, #110F29, #0D173A, #010921,
+			#0D173A, #110F29, #1E1937,
+			#100B2A, #1E1937, #110F29, #0D173A, #010921
+	);
+	background-size: 300% 300%;
+	animation: gradient-bg 50s ease infinite;
+}
+
+@keyframes gradient-bg {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.port-bg-gradient-b {
     width: full;
     height: full;
     background: radial-gradient(
         circle at 150%,
-        #100B2A, #1E1937, #110F29, #0D173A, #010921,
+        red, #1E1937, #110F29, blue, #010921,
         #0D173A, #110F29, #1E1937,
-        #100B2A, #1E1937, #110F29, #0D173A, #010921
+        red, #1E1937, #110F29, blue, #010921
     );
     background-size: 300% 300%;
     animation: gradient-bg 50s ease infinite;
 }
+
+@layer underline {
+  .underline-animate {
+    @apply relative;
+  }
+
+  .underline-animate::after {
+    @apply absolute content-[''] w-full h-[1px] left-0 bottom-[-4px] bg-gradient-to-r from-transparent via-[rgb(var(--color-accent))] to-[rgb(var(--color-accent-dark))];
+    background-size: 250% 100%;
+    animation: animate-gradient 3s linear infinite alternate;
+  }
+}
+
+@keyframes animate-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@layer shine-text {
+  .shine-text {
+    @apply text-[rgba(var(--color-accent),0.5)] bg-clip-text inline-block;
+
+    background-image: linear-gradient(120deg, rgba(255, 255, 255, 0) 20%, rgba(var(--color-accent),0.8) 50%, rgba(255, 255, 255, 0) 80%);
+    background-size: 200% 100%;
+    --webkit-background-clip: text;
+    animation-duration: 5s;
+    animation: animate-shine 5s linear infinite;
+  }
+}
+
+@keyframes animate-shine {
+  0% { 
+    background-position: 100%;
+  }
+  100% { 
+    background-position: -100%; 
+  }
+}
+
+@layer hover-text-animate {
+  .hover-text-animate {
+    display: inline-block;
+    position: relative;
+
+    background-image: linear-gradient(
+      90deg,
+      white, #ff6467, #00d3f2, #0092b8
+    );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+
+    background-size: 300%;
+    background-position: 0%;
+
+    transition: background-position 0.5s ease-in-out, transform 0.1s ease-in-out;
+  }
+
+  .hover-text-animate::before {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+     transparent, transparent, #00d3f2, #0092b8
+    );
+    background-size: 300% 100%;
+    background-position: 0% 100%;
+    transition: background-position 0.5s ease-in-out;
+  }
+
+  .hover-text-animate::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 1px;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+     transparent, transparent, #00d3f2, #0092b8
+    );
+    background-size: 300% 100%;
+    background-position: 0% 100%;
+    transition: background-position 0.5s ease-in-out;
+  }
+
+  .hover-text-animate:hover,
+  .hover-text-animate:active {
+    transform: scale(1.1);
+    background-position: 100%;
+  }
+
+  .hover-text-animate:hover::after,
+  .hover-text-animate:active::after {
+    background-position: 100%;
+  }
+}
+
+@layer hover-text-as {
+  .hover-text-animates {
+    @apply relative scale-100 hover:scale-110 transition-transform
+    bg-clip-text text-transparent inline-block
+    bg-linear-to-r from-white to-cyan-400;
+
+    background-size: 200% 100%;
+    background-position: 0% 100%;
+  }
   
+  .hover-text-animates:hover {
+    background-position: 100% 100%;
+  }
+}
+
+@layer separator {
+  .div-separator-a {
+    @apply relative h-[20px];
+  }
+
+  .div-separator-a::after {
+    @apply z-[-1] absolute content-[''] w-full h-[2px] left-0 bottom-[14px] 
+    bg-gradient-to-r from-transparent via-[var(--color-accent)] to-[var(--color-accent-dark)];
+
+    background-size: 250% 100%;
+    animation: animate-gradient 4s linear infinite alternate 1s;
+  }
+
+  .div-separator-b {
+    @apply relative h-[10px];
+  }
+
+  .div-separator-b::after {
+    @apply z-[-1] absolute content-[''] w-full h-[1px] left-0 bottom-[5px]
+    bg-gradient-to-r from-transparent via-[var(--color-interact)] to-[var(--color-interact-dark)];
+    background-size: 250% 100%;
+    animation: animate-gradient 2s linear infinite alternate;
+  }
+
+}
+
+
+/* @layer underline {
+  .underline-animate {
+    @apply relative;
+  }
+
+  .underline-animate::after {
+    @apply absolute content-[''] w-full h-0.5 left-0 bottom-[-4px]
+    bg-linear-to-br from-cyan-300;
+  }
+} */
+
+

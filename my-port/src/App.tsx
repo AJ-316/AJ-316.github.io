@@ -1,22 +1,28 @@
-import CircuitLines from "./components/CircuitLines";
-
+import Footer from "./components/Footer";
+import TitlePage from "./components/TitlePage.tsx";
+import SkillsPage from "./components/SkillsPage.tsx";
+import ProjectPage from "./components/ProjectPage.tsx";
+import Particles from "./components/Particles.tsx";
 const App = () => {
-  return (
-    <main className="port-bg-gradient h-screen w-screen">
+    return (
+        <>
+            <div className="fixed min-h-screen w-full z-[-2] overflow-hidden port-bg-gradient-a" />
 
-      <div className="absolute w-full h-full" >
-        <CircuitLines />
-      </div>
+            <main className="snap-y snap-mandatory scroll-snap-stop always overflow-y-scroll relative min-w-0 h-screen w-full">
 
-      <div className="flex items-center justify-center">
-        <h1 className="text-white p-19 font-[Montserrat]">
-          <p className="text-3xl font-thin">Hi, I'm</p>
-          <p className="text-7xl">Advaitya Jadhav</p>
-        </h1>
-      </div>
-     
-    </main>
-  );
+                <section className="snap-start h-screen">
+                    <TitlePage />
+                </section>
+                <section className="snap-center h-screen">
+                    <SkillsPage />
+                </section>
+                <section className="snap-center min-h-screen overflow-hidden">
+                    <ProjectPage />
+                </section>
+            </main>
+
+        </>
+    );
 };
 
 export default App;
