@@ -1,28 +1,24 @@
-import Footer from "./components/Footer";
-import TitlePage from "./components/TitlePage.tsx";
-import SkillsPage from "./components/SkillsPage.tsx";
-import ProjectPage from "./components/ProjectPage.tsx";
-import Particles from "./components/Particles.tsx";
+import {Route, Routes} from "react-router-dom";
+import ProfileSelection from "./components/ProfileSelection.tsx";
+import IDEMain from "./components/ide/IDEMain.tsx";
+import TestPage from "./components/pages/TestPage.tsx";
+
 const App = () => {
+
     return (
-        <>
-            <div className="fixed min-h-screen w-full z-[-2] overflow-hidden port-bg-gradient-a" />
+        <Routes>
+            <Route path="/" element={<ProfileSelection/>}/>
+            <Route element={<IDEMain />}>
 
-            <main className="snap-y snap-mandatory scroll-snap-stop always overflow-y-scroll relative min-w-0 h-screen w-full">
+                <Route path=":profile/home" element={<TestPage title="Home" />} />
+                <Route path=":profile/about" element={<TestPage title="About" />} />
+                <Route path=":profile/projects" element={<TestPage title="Projects" />} />
 
-                <section className="snap-start h-screen">
-                    <TitlePage />
-                </section>
-                <section className="snap-center h-screen">
-                    <SkillsPage />
-                </section>
-                <section className="snap-center min-h-screen overflow-hidden">
-                    <ProjectPage />
-                </section>
-            </main>
-
-        </>
-    );
+                <Route path="contact" element={<TestPage title="Contact" />} />
+                <Route path="skills" element={<TestPage title="Skills" />} />
+            </Route>
+        </Routes>
+    )
 };
 
 export default App;
