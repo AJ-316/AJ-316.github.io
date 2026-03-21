@@ -5,12 +5,18 @@ interface TestPageProps {
 }
 
 const TestPage = (prop: TestPageProps) => {
-    const { profile } = useParams();
+    const {profile} = useParams();
 
     return (
-        <>
-            <h1>Test Page "{prop.title}{profile && " (" + profile + ")"}"</h1>
-        </>
+        <div className="w-full whitespace-pre">
+            <h1>
+                {Array.from({length: 1000})
+                    .map((_, i) => `Test Page [${i + 1}] ${prop.title}${profile ? ` ${profile}` : ""}`)
+                    .join("\n")}
+            </h1>
+            {/*{Array.from({ length: 1000 })
+                .map((_, i) => <h1>Test Page [{i + 1}] {prop.title}{profile ? profile : ""}</h1>)}*/}
+        </div>
     )
 }
 

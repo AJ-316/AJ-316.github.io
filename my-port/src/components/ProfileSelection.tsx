@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom';
-import {useState} from "react";
-import {useProfile} from "./ide/ProfileProvider.tsx";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useProfile } from "./ide/ProfileProvider.tsx";
 
 const ProfileSelection = () => {
-    const [route, setRoute] = useState("/software-dev");
+    const [route, setRoute] = useState("software-dev");
     const navigate = useNavigate();
     const { setProfile } = useProfile();
 
@@ -17,13 +17,14 @@ const ProfileSelection = () => {
         <>
             <div>
                 <select onChange={(e) => setRoute(e.target.value)}>
-                    <option value="/software-dev">Software Developer</option>
-                    <option value="/game-dev">Game Developer</option>
+                    <option value="software-dev">Software Developer</option>
+                    <option value="game-dev">Game Developer</option>
                 </select>
                 <button onClick={handleNavigate} type="button">Go</button>
             </div>
         </>
     );
-}
+};
 
 export default ProfileSelection;
+

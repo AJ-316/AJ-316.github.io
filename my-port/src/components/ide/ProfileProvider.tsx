@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useContext, useState} from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 type ProfileContextType = {
     profile: string | null;
@@ -7,8 +7,31 @@ type ProfileContextType = {
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
+const STORAGE_KEY = "ide.activeProfile";
+
+const normalizeProfile = (value: string | null): string | null => {
+    if (!value) return null;
+    return value.replace(/^\/+/, "");
+};
+
 export function ProfileProvider({ children }: { children: ReactNode }) {
-    const [profile, setProfile] = useState<string | null>(null);
+    const [profile, setProfileState] = useState<string | null>(() => {
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+        return normalizeProfile(stored);
+    });
+
+    const setProfile = (nextProfile: string | null) => {
+        setProfileState(normalizeProfile(nextProfile));
+    };
+
+    useEffect(() => {
+        if (profile) {
+            window.localStorage.setItem(STORAGE_KEY, profile);
+            return;
+        }
+
+        window.localStorage.removeItem(STORAGE_KEY);
+    }, [profile]);
 
     return (
         <ProfileContext.Provider value={{ profile, setProfile }}>
