@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useProfile } from "./ide/ProfileProvider.tsx";
+import { useProject } from "./ide/ProfileProvider.tsx";
 
-const ProfileSelection = () => {
+const ProfileSelectionTemp = () => {
     const [route, setRoute] = useState("software-dev");
     const navigate = useNavigate();
-    const { setProfile } = useProfile();
+    const { setProject } = useProject();
 
     const handleNavigate = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        setProfile(route);
+        setProject(route);
         navigate(`/${route}/home`);
     };
 
@@ -26,5 +26,5 @@ const ProfileSelection = () => {
     );
 };
 
-export default ProfileSelection;
+export default ProfileSelectionTemp;
 

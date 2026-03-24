@@ -1,64 +1,49 @@
 import {Route, Routes} from "react-router-dom";
-import ProfileSelection from "./components/ProfileSelection.tsx";
+import ProfileSelectionTemp from "./components/ProfileSelectionTemp.tsx";
 import IDEMain from "./components/ide/IDEMain.tsx";
 import TestPage from "./components/pages/TestPage.tsx";
+import IDEHome from "./components/ide/projectselection/IDEHome.tsx";
+import ProjectSelection from "./components/ide/projectselection/ProjectSelection.tsx";
+import {useEffect, useState} from "react";
+import AboutThePortfolio from "./components/ide/projectselection/AboutThePortfolio.tsx";
 
 const App = () => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const media = window.matchMedia("(max-width: 768px)");
+        const applyMediaState = (matches: boolean) => {
+            setIsMobile(matches);
+        }
+
+        applyMediaState(media.matches);
+
+        const onChange = (event: MediaQueryListEvent) => {
+            applyMediaState(event.matches);
+        };
+
+        media.addEventListener("change", onChange);
+        return () => media.removeEventListener("change", onChange);
+    }, []);
 
     return (
-        /*<div className={`grid h-dvh grid-rows-[auto_1fr_auto] bg-gray-600 text-black font-bold`}>
-            <div className="text-xl">
-                Header
-            </div>
-
-            {<div className="flex whitespace-pre overflow-y-auto bg-white">
-                {/!*gutter*!/}
-                <div className="min-w-0">
-                    <div className="border-r-1 shrink-0 bg-blue-400 mr-2">
-                        {Array.from({length: 90}).map((_, i) => (
-                            <h1 className="bg-yellow-400/30">{(i + 1)}</h1>
-                        ))}
-                    </div>
-                </div>
-
-                {/!*content*!/}
-                <div className="flex-1 min-w-0">
-                    <div className="overflow-x-auto overflow-y-hidden">
-                        <div className="min-w-max whitespace-pre bg-blue-400">
-                            <div className="flex flex-col">
-                                {Array.from({length: 10}).map((_, i) => (
-                                    `Test Page [${i + 1}] A really long line that should overflow and cause horizontal scrolling\n`/!*<h1 className="bg-yellow-400/30"></h1>*!/
-                                ))}
-
-                                <img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif" className="scale-25" />
-
-                                {Array.from({length: 20}).map((_, i) => (
-                                    `Test Page [${i + 1}] A really long line that should overflow and cause horizontal scrolling\n`/!*<h1 className="bg-yellow-400/30"></h1>*!/
-                                ))}
-                                <img src="https://imgs.search.brave.com/fJnq7mT0OF3o5pJobCZOTnsIanVZaEnzoCeBooOobtI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMjE3/MzkyMzU3Ni9waG90/by9hYnN0cmFjdC1x/dWFudHVtLWNvbXB1/dGluZy5qcGc_cz02/MTJ4NjEyJnc9MCZr/PTIwJmM9cGpBelA4/V213X2xHM19sV3Jv/cnRPM1liMHN0Q1Zy/NDcxQ09QSkdxNHBw/VT0" className="scale-25" />
-
-                                {Array.from({length: 30}).map((_, i) => (
-                                    `Test Page [${i + 1}] A really long line that should overflow and cause horizontal scrolling\n`/!*<h1 className="bg-yellow-400/30"></h1>*!/
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>}
-            <div className="text-xl">
-                Footer
-            </div>
-        </div>*/
         <Routes>
-            <Route path="/" element={<ProfileSelection/>}/>
-            <Route element={<IDEMain />}>
+            <Route path="/" element={<IDEHome isMobile={isMobile}/>}>
+                <Route index element={<ProjectSelection/>}/>
+                <Route path="home-about" element={<AboutThePortfolio />}/>
+                <Route path="home-contact" element={<TestPage title="Contact Me"/>}/>
+            </Route>
 
-                <Route path=":profile/home" element={<TestPage title="Home" />} />
-                <Route path=":profile/about" element={<TestPage title="About" />} />
-                <Route path=":profile/projects" element={<TestPage title="Projects" />} />
+            <Route path="/ps" element={<ProfileSelectionTemp/>}/>
 
-                <Route path="contact" element={<TestPage title="Contact" />} />
-                <Route path="skills" element={<TestPage title="Skills" />} />
+            <Route element={<IDEMain isMobile={isMobile}/>}>
+
+                <Route path=":project/home" element={<TestPage lines={1000} title="Home"/>}/>
+                <Route path=":project/about" element={<TestPage lines={1000} title="About"/>}/>
+                <Route path=":project/projects" element={<TestPage lines={1000} title="ProjectSelection"/>}/>
+
+                <Route path="contact" element={<TestPage lines={1000} title="Contact"/>}/>
+                <Route path="skills" element={<TestPage lines={1000} title="Skills"/>}/>
             </Route>
         </Routes>
     )

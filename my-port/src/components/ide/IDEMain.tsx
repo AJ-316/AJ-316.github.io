@@ -5,60 +5,50 @@ import NavigationPane from "./NavigationPane.tsx";
 import FooterPane from "./FooterPane.tsx";
 import ContentTitlePane from "./ContentTitlePane.tsx";
 import NavDisplayButton from "./NavDisplayButton.tsx";
-import {useProfile} from "./ProfileProvider.tsx";
-import {profiles} from "./profiles.ts";
+import {useProject} from "./ProfileProvider.tsx";
+import {projects} from "./projects.ts";
 import {getActiveNavItem} from "./nav/navConfig.ts";
 import {useLineCount} from "./lineCount.ts";
 
-const IDEMain = () => {
+interface IDEMainProps {
+    isMobile: boolean;
+}
+
+const IDEMain = ({isMobile}: IDEMainProps) => {
     const location = useLocation();
-    const {profile: urlProfile} = useParams();
-    const {profile, setProfile} = useProfile();
+    const {project: urlProject} = useParams();
+    const {project, setProject} = useProject();
 
     const [isNavOpen, setIsNavOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
 
     const lineHeight = 24;
     const {ref, lineCount} = useLineCount(lineHeight);
     const [hoveredLine, setHoveredLine] = useState<number | null>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
+    useEffect(() => {
+        setIsNavOpen(!isMobile);
+    }, [isMobile]);
+
     const validProfileSlugs = useMemo(
-        () => new Set(profiles.map((item) => item.link.replace(/^\//, ""))),
+        () => new Set(projects.map((item) => item.link.replace(/^\//, ""))),
         []
     );
 
     useEffect(() => {
-        const media = window.matchMedia("(max-width: 768px)");
-        const applyMediaState = (matches: boolean) => {
-            setIsMobile(matches);
-            setIsNavOpen(!matches);
+        if (urlProject) {
+            setProject(urlProject);
         }
-
-        applyMediaState(media.matches);
-
-        const onChange = (event: MediaQueryListEvent) => {
-            applyMediaState(event.matches);
-        };
-
-        media.addEventListener("change", onChange);
-        return () => media.removeEventListener("change", onChange);
-    }, []);
-
-    useEffect(() => {
-        if (urlProfile) {
-            setProfile(urlProfile);
-        }
-    }, [urlProfile, setProfile]);
+    }, [urlProject, setProject]);
 
     const activeItem = getActiveNavItem(location.pathname);
-    const effectiveProfile = urlProfile ?? profile;
+    const effectiveProfile = urlProject ?? project;
 
-    if (urlProfile && !validProfileSlugs.has(urlProfile)) {
+    if (urlProject && !validProfileSlugs.has(urlProject)) {
         return <Navigate to="/" replace/>;
     }
 
-    if (activeItem?.useProfileBase && !effectiveProfile) {
+    if (activeItem?.useProjectBase && !effectiveProfile) {
         return <Navigate to="/" replace/>;
     }
 
@@ -83,7 +73,7 @@ const IDEMain = () => {
     }
 
     return (
-        <div className={`grid h-dvh grid-rows-[auto_1fr_auto] bg-neutral-950
+        <div className={`grid h-dvh grid-rows-[auto_1fr_auto] bg-gradient-to-br from-slate-950 to-black
                         pb-[calc(env(safe-area-inset-bottom)+12px)] select-none
                          ${isMobile ? "grid-cols-[1fr]" : "grid-cols-[auto_1fr]"}`}>
             <header className="col-span-2 p-3">
@@ -92,7 +82,7 @@ const IDEMain = () => {
 
             <nav className={`min-h-0 transition-[translate,opacity,width] duration-800
                             ${isNavOpen ? "w-[260px]" : "mx-0 w-0"}
-                            ${isMobile ? "absolute translate-y-26 z-50" : "relative"}`}
+                            ${isMobile ? "absolute translate-y-17 z-50" : "relative"}`}
                  style={{opacity: isNavOpen ? 1 : 0}}>
                 <NavigationPane
                     onClose={() => {
@@ -139,7 +129,7 @@ const IDEMain = () => {
             </main>
 
             <footer className="z-10 col-span-2 my-3 mx-2 md:mx-1.5 md:mb-0 md:mt-5">
-                <FooterPane/>
+                <FooterPane isMobile={isMobile}/>
             </footer>
         </div>
     );

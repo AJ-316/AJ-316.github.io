@@ -1,9 +1,10 @@
 import {useEffect, useState} from "react";
 import {IconType} from "react-icons";
 import {VscGithubProject, VscPackage} from "react-icons/vsc";
-import {useLocation} from "react-router-dom";
-import {useProfile} from "./ProfileProvider.tsx";
+import {NavLink, useLocation} from "react-router-dom";
+import {useProject} from "./ProfileProvider.tsx";
 import {getActiveNavItem} from "./nav/navConfig.ts";
+import {GoProjectSymlink} from "react-icons/go";
 
 interface BreadCrumb {
     icon?: IconType | null;
@@ -19,7 +20,7 @@ interface CTPProps {
 
 const ContentTitlePane = ({navOpenButton, isNavOpenButtonVisible}: CTPProps) => {
     const location = useLocation();
-    const { profile } = useProfile();
+    const { project } = useProject();
     const [breadCrumbs, setBreadCrumbs] = useState<BreadCrumb[]>([]);
 
     useEffect(() => {
@@ -32,10 +33,10 @@ const ContentTitlePane = ({navOpenButton, isNavOpenButtonVisible}: CTPProps) => 
                 label: "workspaces",
                 isActive: false,
             },
-            ...(profile ? [{
+            ...(project ? [{
                 icon: VscPackage,
                 iconColor: "text-[#fff]",
-                label: profile,
+                label: project,
                 isActive: false,
             }] : []),
             ...(active ? [{
@@ -45,10 +46,10 @@ const ContentTitlePane = ({navOpenButton, isNavOpenButtonVisible}: CTPProps) => 
                 isActive: true,
             }] : [])
         ])
-    }, [profile, location.pathname]);
+    }, [project, location.pathname]);
 
     return (
-        <div className="grid grid-cols-[auto_auto_1fr_auto] grid-rows-[18px] items-center m-1 p-3 border-b border-gray-500 rounded-lg">
+        <div className="grid-cols-[auto_auto_1fr_auto] title-pane">
             <div className={`transition-[padding,margin,width,opacity] border-gray-600 duration-800 ${isNavOpenButtonVisible ? "border-r-1 opacity-100 mr-4 pr-4":"border-r-0 m-0 p-0 w-0 opacity-0"}`}>
                 {navOpenButton}
             </div>
@@ -63,6 +64,13 @@ const ContentTitlePane = ({navOpenButton, isNavOpenButtonVisible}: CTPProps) => 
                         </li>
                     ))}
                 </ul>
+            </div>
+            <span></span>
+            <div className="flex items-center text-sm">
+                <NavLink className="flex items-center btn-i-active" to={"/"}>
+                    <span className="hidden md:block mr-2">Change Workspace</span>
+                    <GoProjectSymlink className="icon" />
+                </NavLink>
             </div>
         </div>
     );

@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-type ProfileContextType = {
-    profile: string | null;
-    setProfile: (profile: string | null) => void;
+type ProjectContextType = {
+    project: string | null;
+    setProject: (project: string | null) => void;
 };
 
-const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
+const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 const STORAGE_KEY = "ide.activeProfile";
 
@@ -15,33 +15,33 @@ const normalizeProfile = (value: string | null): string | null => {
 };
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
-    const [profile, setProfileState] = useState<string | null>(() => {
+    const [project, setProjectState] = useState<string | null>(() => {
         const stored = window.localStorage.getItem(STORAGE_KEY);
         return normalizeProfile(stored);
     });
 
-    const setProfile = (nextProfile: string | null) => {
-        setProfileState(normalizeProfile(nextProfile));
+    const setProject = (nextProfile: string | null) => {
+        setProjectState(normalizeProfile(nextProfile));
     };
 
     useEffect(() => {
-        if (profile) {
-            window.localStorage.setItem(STORAGE_KEY, profile);
+        if (project) {
+            window.localStorage.setItem(STORAGE_KEY, project);
             return;
         }
 
         window.localStorage.removeItem(STORAGE_KEY);
-    }, [profile]);
+    }, [project]);
 
     return (
-        <ProfileContext.Provider value={{ profile, setProfile }}>
+        <ProjectContext.Provider value={{ project, setProject }}>
             {children}
-        </ProfileContext.Provider>
+        </ProjectContext.Provider>
     );
 }
 
-export function useProfile(): ProfileContextType {
-    const context = useContext(ProfileContext);
+export function useProject(): ProjectContextType {
+    const context = useContext(ProjectContext);
 
     if (!context) {
         throw new Error("useProfile must be used inside ProfileProvider");

@@ -7,7 +7,7 @@ interface NavDisplayButtonProps {
 
 const NavDisplayButton = ({ setIsNavOpen, isNavOpen }: NavDisplayButtonProps) => {
     return (
-        <button className="flex items-center justify-center btn-i-active text-white w-6.5 h-6.5" onClick={() => setIsNavOpen(isNavOpen)}>
+        <button className="btn-i-active" onClick={() => setIsNavOpen(isNavOpen)}>
             {isNavOpen ? <TbLayoutSidebarLeftExpand className="icon text-success"/> : <TbLayoutSidebarRightExpand className="icon text-error" />}
         </button>
     );

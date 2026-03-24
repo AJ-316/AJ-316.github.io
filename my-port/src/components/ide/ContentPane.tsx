@@ -1,18 +1,18 @@
 import { Routes, Route } from "react-router-dom";
 import TestPage from "../pages/TestPage.tsx";
-import {Profile} from "./profiles.ts";
+import {Project} from "./projects.ts";
 
 interface ContentPaneProps {
-    profile: Profile;
+    project: Project;
 }
 
-const ContentPane = ({profile}: ContentPaneProps) => {
+const ContentPane = ({project}: ContentPaneProps) => {
     return (
         <>
             <Routes>
                 <Route path="/home" element={<TestPage title={"Home"}/>} />
                 <Route path="/about" element={<TestPage title={"About"}/>} />
-                <Route path="/projects" element={<TestPage title={"Projects"}/>} />
+                <Route path="/projects" element={<TestPage title={"ProjectSelection"}/>} />
                 <Route path="/contact" element={<TestPage title={"Contact"}/>} />
             </Routes>
         </>
