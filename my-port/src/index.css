@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+
 @plugin "daisyui";
 
 @layer utilities {
     .scrollbar-hide::-webkit-scrollbar {
         display: none;
     }
+
     .scrollbar-hide {
         -ms-overflow-style: none;
         scrollbar-width: none;
@@ -25,8 +27,8 @@
     @apply font-['Roboto'];
 }
 
-html, body {
-    @apply overflow-hidden h-full bg-neutral-950;
+html,body {
+    @apply overflow-hidden h-full bg-neutral-950 select-none;
 }
 
 body {
@@ -35,9 +37,7 @@ body {
 
 body {
     background: radial-gradient(
-            circle at center,
-            #111827 0%,
-            #020617 100%
+            circle at center,            #111827 0%,            #020617 100%
     );
 }
 
@@ -49,15 +49,20 @@ body {
     @apply scale-[0.98] shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_3px_10px_rgba(0,0,0,0.3)];
 }
 
+.editor-container {
+    @apply grid auto-rows-[24px];
+}
+
 .btn-i-active {
-    @apply text-sky-100 border border-sky-300/20 rounded-[7px]
+    @apply border border-sky-300/20 rounded-[7px]
     bg-gradient-to-b from-sky-400/20 via-sky-500/10 to-indigo-500/10
     shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_6px_16px_rgba(0,0,0,0.35)]
     hover:from-sky-300/25 hover:via-sky-400/15 hover:to-indigo-400/15 hover:border-sky-200/30
+    active:from-sky-300/25 active:via-sky-400/15 active:to-indigo-400/15 active:border-sky-200/30
     active:scale-[0.98] active:shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_3px_10px_rgba(0,0,0,0.3)]
     transition-all duration-200
 
-    px-1 py-1 md:px-1 md:py-1 mx-0.5 md:mx-1 no-underline;
+    px-1 py-1 no-underline;
 }
 
 .btn-i-inactive {
@@ -67,7 +72,7 @@ body {
     pointer-events-none select-none
     transition-all duration-200
 
-    px-1 py-1 md:px-1 md:py-1 mx-0.5 md:mx-1 no-underline;
+    px-1 py-1 no-underline;
 }
 
 .shape-i {
@@ -81,23 +86,26 @@ body {
 }
 
 @keyframes bounceAlt {
-    0% { transform: translateX(0); opacity: 100; }
-    60% { transform: translateX(-10px); opacity: 0; }
-    100% { transform: translateX(0px); opacity: 100; }
+    0% {
+        transform: translateX(0);
+        opacity: 100;
+    }
+    60% {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0px);
+        opacity: 100;
+    }
 }
 
-/*.btn-i-active {
-    @apply transition-colors bg-blue-400/15 hover:bg-white/15 active:bg-white/15 border-1 border-blue-400/10 hover:border-white/15 rounded-[5px];
+.btn-i-inactive .icon {
+    @apply text-gray-400;
 }
 
-.btn-i-inactive {
-    @apply bg-black text-gray-400/50 pointer-events-none border-1 border-white/15 rounded-[5px];
-}*/
-.btn-i-active .icon {
+.icon {
     @apply w-[14px] h-[14px] md:w-4 md:h-4;
-}
-.btn-i-inactive .icon{
-    @apply w-[14px] h-[14px] md:w-4 md:h-4 text-gray-400;
 }
 
 .nav-btn {
@@ -118,14 +126,18 @@ body {
     hover:shadow-[inset_0_0_0_1px_rgba(148,163,184,0.10)];
 }
 
-/*
-.panel {
-    @apply bg-gray-950 border-gray-800 border-2 rounded-lg m-2 h-full shadow-black shadow-2xl;
-}*/
+.panel-backdrop {
+    @apply backdrop-blur-[8px] [mask-image:linear-gradient(to_bottom,transparent,black_2%,black_100%)];
+}
+
+.panel-console {
+    @apply rounded-[6px] bg-slate-950
+    shadow-[inset_0_0_0_1px_rgba(148,163,184,0.08),0_8px_22px_rgba(0,0,0,0.38)]
+    transition-colors duration-200
+}
 
 .panel {
-    @apply m-2 h-full rounded-lg border border-slate-800
-    bg-slate-950/85
+    @apply m-2 rounded-lg border border-slate-800 bg-slate-950/85
     shadow-[inset_0_0_0_1px_rgba(148,163,184,0.08),0_8px_22px_rgba(0,0,0,0.38)]
     transition-colors duration-200;
 }
@@ -133,6 +145,12 @@ body {
 .title-pane {
     @apply grid grid-rows-[18px] items-center p-3 rounded-t-lg
     border-b border-slate-700/40 bg-slate-900/40
+    transition-colors duration-200;
+}
+
+.title-pane-console {
+    @apply grid grid-rows-[18px] text-[11px] items-center p-1.5 px-2 rounded-t-lg
+    border-b border-slate-700/75 bg-slate-900/40
     transition-colors duration-200;
 }
 
@@ -148,10 +166,7 @@ body {
 .logo-aj {
     @apply flex items-center rounded-[6px] w-10 h-10 md:w-12 md:h-12 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_6px_16px_rgba(0,0,0,0.35)] border border-gray-300/25;
     background: radial-gradient(
-            circle at 30% 25%,
-            rgb(156 163 175 / 0.24) 0%,
-            rgb(17 114 128 / 0.14) 50%,
-            rgb(71 85 105 / 0.12) 100%
+            circle at 30% 25%,            rgb(156 163 175 / 0.24) 0%,            rgb(17 114 128 / 0.14) 50%,            rgb(71 85 105 / 0.12) 100%
     );
 }
 
@@ -165,6 +180,7 @@ body {
     transition-all duration-200
     hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_8px_20px_rgba(0,0,0,0.4)];
 }
+
 .project-icon-green {
     @apply bg-gradient-to-bl from-emerald-400/20 via-emerald-500/10 to-teal-500/10 border-emerald-300/25 hover:border-emerald-200/35;
 }
@@ -177,3 +193,39 @@ body {
     @apply bg-gradient-to-bl from-red-400/20 via-red-500/10 to-orange-500/10 border-red-300/25 hover:border-red-200/35;
 }
 
+
+/*
+===================================================================================================
+ Code View Tokens (readable dark theme)
+===================================================================================================
+*/
+
+.code-kw {
+    /* keywords: calm purple,distinct but not glowing */
+    @apply text-violet-300 font-semibold;
+}
+
+.code-str {
+    /* strings: soft green for easy scanning */
+    @apply text-emerald-300 font-medium;
+}
+
+.code-num {
+    /* numbers: cool blue with clear separation from strings */
+    @apply text-sky-300 font-medium;
+}
+
+.code-cmt {
+    /* comments: readable muted gray (not too faint) */
+    @apply text-slate-500 italic;
+}
+
+.code-doc {
+    /* docs/annotations: cyan-teal bridge between kw and str */
+    @apply text-cyan-300 font-medium;
+}
+
+.code-plain {
+    /* default text: high legibility on dark background */
+    @apply text-slate-200;
+}

@@ -2,7 +2,7 @@ import {Outlet, useLocation} from "react-router-dom";
 import HomeHeaderPane from "./HomeHeaderPane.tsx";
 import HomeNavPane from "./HomeNavPane.tsx";
 import {useEffect, useRef, useState} from "react";
-import {getActiveNavItem, getLastSegment} from "../nav/navConfig.ts";
+import {getLastSegment} from "../nav/navConfig.ts";
 
 interface IDEHomeProps {
     isMobile?: boolean
@@ -33,7 +33,7 @@ const IDEHome = ({isMobile}: IDEHomeProps) => {
 
     useEffect(() => {
         const handleOutside = (e: TouchEvent | MouseEvent) => {
-            if(!isMobile) return;
+            if (!isMobile) return;
 
             const target = e.target as Node;
 
@@ -65,7 +65,8 @@ const IDEHome = ({isMobile}: IDEHomeProps) => {
                         home-surface" /*md:border-y-1 border-gray-400/50 md:rounded-2xl md:shadow-black md:shadow-2xl*/
         >
             <div className="col-span-2 m-2 p-4 home-section" /*md:bg-neutral/50 rounded-xl*/>
-                <HomeHeaderPane infoText={infoTexts.get(getLastSegment(location.pathname))} isNavOpen={isNavOpen} onNavToggle={() => setIsNavOpen(p => !p)} buttonRef={buttonRef}/>
+                <HomeHeaderPane infoText={infoTexts.get(getLastSegment(location.pathname))} isNavOpen={isNavOpen}
+                                onNavToggle={() => setIsNavOpen(p => !p)} buttonRef={buttonRef}/>
             </div>
 
             <div ref={navRef}

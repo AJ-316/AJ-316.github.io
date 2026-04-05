@@ -8,7 +8,7 @@ interface HomeHeaderPaneProps {
     infoText?: string;
 }
 
-const HomeHeaderPane = ({ onNavToggle, isNavOpen, buttonRef, infoText }: HomeHeaderPaneProps) => {
+const HomeHeaderPane = ({onNavToggle, isNavOpen, buttonRef, infoText}: HomeHeaderPaneProps) => {
 
     return (
         <div className="grid grid-cols-[auto_1fr_auto] items-center grid-rows-1 w-full">
@@ -20,8 +20,10 @@ const HomeHeaderPane = ({ onNavToggle, isNavOpen, buttonRef, infoText }: HomeHea
 
             <span ref={buttonRef} className="block md:hidden" onClick={onNavToggle}>
                 {/*<IoMenu className="text-4xl"/>*/}
-                <svg viewBox="0 0 10 10" className="w-10 h-10" stroke="#fff" strokeWidth=".6" fill="none" strokeLinecap="round">
-                    <path d={isNavOpen ? "M3,3L5,5L7,3M5,5L5,5M3,7L5,5L7,7" : "M2,3L5,3L8,3M2,5L8,5M2,7L5,7L8,7"} className="duration-200"/>
+                <svg viewBox="0 0 10 10" className="w-10 h-10" stroke="#fff" strokeWidth=".6" fill="none"
+                     strokeLinecap="round">
+                    <path d={isNavOpen ? "M3,3L5,5L7,3M5,5L5,5M3,7L5,5L7,7" : "M2,3L5,3L8,3M2,5L8,5M2,7L5,7L8,7"}
+                          className="duration-200"/>
                 </svg>
             </span>
 

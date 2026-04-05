@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {createContext, ReactNode, useContext, useEffect, useState} from "react";
 
 type ProjectContextType = {
     project: string | null;
@@ -14,7 +14,7 @@ const normalizeProfile = (value: string | null): string | null => {
     return value.replace(/^\/+/, "");
 };
 
-export function ProfileProvider({ children }: { children: ReactNode }) {
+export function ProfileProvider({children}: { children: ReactNode }) {
     const [project, setProjectState] = useState<string | null>(() => {
         const stored = window.localStorage.getItem(STORAGE_KEY);
         return normalizeProfile(stored);
@@ -34,7 +34,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }, [project]);
 
     return (
-        <ProjectContext.Provider value={{ project, setProject }}>
+        <ProjectContext.Provider value={{project, setProject}}>
             {children}
         </ProjectContext.Provider>
     );

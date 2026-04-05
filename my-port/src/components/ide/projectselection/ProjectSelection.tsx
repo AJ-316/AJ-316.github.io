@@ -1,11 +1,10 @@
 import {projects} from "../projects.ts";
-import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useProject} from "../ProfileProvider.tsx";
 
 const ProjectSelection = () => {
     const navigate = useNavigate();
-    const { setProject } = useProject();
+    const {setProject} = useProject();
 
     const handleNavigate = (project: string) => {
         setProject(project);
@@ -26,7 +25,8 @@ const ProjectSelection = () => {
                         </div>
                         <div className="flex flex-col">
                             <span className="text-2xl font-medium">{project.name}</span>
-                            <span className="font-code text-xs md:text-md font-medium">~portfolio/projects/{project.link}</span>
+                            <span
+                                className="font-code text-xs md:text-md font-medium">~portfolio/projects/{project.link}</span>
                         </div>
                     </div>
                 </>

@@ -1,11 +1,12 @@
 import {Route, Routes} from "react-router-dom";
 import ProfileSelectionTemp from "./components/ProfileSelectionTemp.tsx";
 import IDEMain from "./components/ide/IDEMain.tsx";
-import TestPage from "./components/pages/TestPage.tsx";
+import TestPage from "./components/ide/console/pages/TestPage.tsx";
 import IDEHome from "./components/ide/projectselection/IDEHome.tsx";
 import ProjectSelection from "./components/ide/projectselection/ProjectSelection.tsx";
 import {useEffect, useState} from "react";
 import AboutThePortfolio from "./components/ide/projectselection/AboutThePortfolio.tsx";
+import Home from "./components/ide/console/pages/Home.tsx";
 
 const App = () => {
     const [isMobile, setIsMobile] = useState(false);
@@ -30,7 +31,7 @@ const App = () => {
         <Routes>
             <Route path="/" element={<IDEHome isMobile={isMobile}/>}>
                 <Route index element={<ProjectSelection/>}/>
-                <Route path="home-about" element={<AboutThePortfolio />}/>
+                <Route path="home-about" element={<AboutThePortfolio/>}/>
                 <Route path="home-contact" element={<TestPage title="Contact Me"/>}/>
             </Route>
 
@@ -38,12 +39,12 @@ const App = () => {
 
             <Route element={<IDEMain isMobile={isMobile}/>}>
 
-                <Route path=":project/home" element={<TestPage lines={1000} title="Home"/>}/>
-                <Route path=":project/about" element={<TestPage lines={1000} title="About"/>}/>
-                <Route path=":project/projects" element={<TestPage lines={1000} title="ProjectSelection"/>}/>
+                <Route path=":project/home" element={<Home/>}/>
+                <Route path=":project/about" element={<TestPage lines={15} title="About"/>}/>
+                <Route path=":project/projects" element={<TestPage lines={15} title="ProjectSelection"/>}/>
 
-                <Route path="contact" element={<TestPage lines={1000} title="Contact"/>}/>
-                <Route path="skills" element={<TestPage lines={1000} title="Skills"/>}/>
+                <Route path="contact" element={<TestPage lines={15} title="Contact"/>}/>
+                <Route path="skills" element={<TestPage lines={1500} title="Skills"/>}/>
             </Route>
         </Routes>
     )

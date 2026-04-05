@@ -1,20 +1,21 @@
-import { CiFolderOn } from "react-icons/ci";
+import {CiFolderOn} from "react-icons/ci";
 import NavButton from "./nav/NavButton.tsx";
-import { useProject } from "./ProfileProvider.tsx";
-import { NAV_ITEMS, toPath } from "./nav/navConfig.ts";
+import {useProject} from "./ProfileProvider.tsx";
+import {NAV_ITEMS, toPath} from "./nav/navConfig.ts";
 
 interface NavigationPaneProps {
     closeButton: React.ReactNode;
     onClose?: () => void | null;
 }
 
-const NavigationPane = ({ closeButton, onClose }: NavigationPaneProps) => {
-    const { project } = useProject();
+const NavigationPane = ({closeButton, onClose}: NavigationPaneProps) => {
+    const {project} = useProject();
 
     return (
-        <div className="whitespace-nowrap overflow-hidden panel">
+        <div className="whitespace-nowrap overflow-hidden panel h-full">
             <div className="grid-cols-[auto_1fr_auto] text-gray-400 uppercase text-xs tracking-widest gap-3 title-pane">
-                <CiFolderOn className="text-lg" /> File Explorer
+                <CiFolderOn className="text-lg"/>
+                File Explorer
                 {closeButton}
             </div>
 

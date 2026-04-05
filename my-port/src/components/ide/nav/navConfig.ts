@@ -14,11 +14,11 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-    { segment: "home", label: "home.java", icon: GrJava, color: "!text-[#F89820]", useProjectBase: true },
-    { segment: "about", label: "about.js", icon: TbBrandJavascript, color: "!text-[#F7DF1E]", useProjectBase: true },
-    { segment: "skills", label: "skills.sql", icon: FiDatabase, color: "!text-[#2b7afb]", useProjectBase: false },
-    { segment: "projects", label: "projects.csv", icon: CiViewTable, color: "!text-[#6DB33F]", useProjectBase: true },
-    { segment: "contact", label: "contact.json", icon: VscJson, color: "!text-[#C77DFF]", useProjectBase: false },
+    {segment: "home", label: "home.java", icon: GrJava, color: "!text-[#F89820]", useProjectBase: true},
+    {segment: "about", label: "about.js", icon: TbBrandJavascript, color: "!text-[#F7DF1E]", useProjectBase: true},
+    {segment: "skills", label: "skills.sql", icon: FiDatabase, color: "!text-[#2b7afb]", useProjectBase: false},
+    {segment: "projects", label: "projects.csv", icon: CiViewTable, color: "!text-[#6DB33F]", useProjectBase: true},
+    {segment: "contact", label: "contact.json", icon: VscJson, color: "!text-[#C77DFF]", useProjectBase: false},
 ];
 
 export const toPath = (item: NavItem, project?: string | null): string => {

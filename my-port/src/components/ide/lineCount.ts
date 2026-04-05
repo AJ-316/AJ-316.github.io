@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 
 export const useLineCount = (lineHeight: number = 24) => {
     const ref = useRef<HTMLDivElement>(null);
@@ -9,7 +9,7 @@ export const useLineCount = (lineHeight: number = 24) => {
         if (!el) return;
 
         const update = () => {
-            const contentHeight = el.scrollHeight; // 🔥 key fix
+            const contentHeight = el.scrollHeight;
             setLineCount(Math.ceil(contentHeight / lineHeight));
         };
 
@@ -21,5 +21,5 @@ export const useLineCount = (lineHeight: number = 24) => {
         return () => observer.disconnect();
     }, [lineHeight]);
 
-    return { ref, lineCount };
+    return {ref, lineCount};
 };

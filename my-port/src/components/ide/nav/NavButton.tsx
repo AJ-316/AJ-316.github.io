@@ -17,7 +17,7 @@ const NavButton = ({to, label, color, icon: Icon, onClick, className}: NavButton
             relative="path"
             onClick={onClick}
             className={({isActive}) =>
-                `font-code nav-btn ${isActive ? "nav-btn-active" : "nav-btn-inactive" } ${className ?? ""}`
+                `font-code nav-btn ${isActive ? "nav-btn-active" : "nav-btn-inactive"} ${className ?? ""}`
             }
         >
             {Icon && <Icon className={`w-5 h-5 text-xl ${color}`}/>}

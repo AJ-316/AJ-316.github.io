@@ -1,75 +1,78 @@
-import {useEffect, useState} from "react";
-import {IconType} from "react-icons";
-import {VscGithubProject, VscPackage} from "react-icons/vsc";
 import {NavLink, useLocation} from "react-router-dom";
-import {useProject} from "./ProfileProvider.tsx";
-import {getActiveNavItem} from "./nav/navConfig.ts";
 import {GoProjectSymlink} from "react-icons/go";
-
-interface BreadCrumb {
-    icon?: IconType | null;
-    iconColor?: string;
-    label: string;
-    isActive?: boolean;
-}
+import {getActiveNavItem, getLastSegment, NavItem} from "./nav/navConfig.ts";
+import React, {useEffect, useState} from "react";
+import {ExecState} from "./IDEMain.tsx";
+import {CiFolderOn} from "react-icons/ci";
+import {RiCodeSSlashFill} from "react-icons/ri";
+import {LoadingIcon, PlayIcon, StopIcon} from "../OutputIcons.tsx";
 
 interface CTPProps {
-    navOpenButton?: React.ReactNode;
-    isNavOpenButtonVisible: boolean;
+    navOpenButton?: React.ReactNode,
+    isNavOpenButtonVisible: boolean,
+    onExecuteStop: () => void,
+    onExecuteRun: () => void,
+    executeState?: ExecState,
 }
 
-const ContentTitlePane = ({navOpenButton, isNavOpenButtonVisible}: CTPProps) => {
+const ContentTitlePane = ({
+                              navOpenButton,
+                              isNavOpenButtonVisible,
+                              onExecuteRun,
+                              onExecuteStop,
+                              executeState
+                          }: CTPProps) => {
     const location = useLocation();
-    const { project } = useProject();
-    const [breadCrumbs, setBreadCrumbs] = useState<BreadCrumb[]>([]);
+    const [openedFile, setOpenedFile] = useState<NavItem | null>(null);
 
     useEffect(() => {
-        const active = getActiveNavItem(location.pathname);
-
-        setBreadCrumbs([
-            {
-                icon: VscGithubProject,
-                iconColor: "text-[#fff]",
-                label: "workspaces",
-                isActive: false,
-            },
-            ...(project ? [{
-                icon: VscPackage,
-                iconColor: "text-[#fff]",
-                label: project,
-                isActive: false,
-            }] : []),
-            ...(active ? [{
-                icon: active.icon,
-                iconColor: active.color,
-                label: active.label,
-                isActive: true,
-            }] : [])
-        ])
-    }, [project, location.pathname]);
+        setOpenedFile(getActiveNavItem(location.pathname));
+    }, [location.pathname]);
 
     return (
-        <div className="grid-cols-[auto_auto_1fr_auto] title-pane">
-            <div className={`transition-[padding,margin,width,opacity] border-gray-600 duration-800 ${isNavOpenButtonVisible ? "border-r-1 opacity-100 mr-4 pr-4":"border-r-0 m-0 p-0 w-0 opacity-0"}`}>
+        <div className={`grid-cols-[auto_auto_1fr_auto_auto] md:grid-cols-[auto_auto_1fr_1fr_auto] items-center title-pane z-10`}>
+            <div className={`transition-[padding,margin,width,opacity] border-gray-600 duration-800 
+                ${isNavOpenButtonVisible ? "opacity-100" : "opacity-0 w-0 pointer-events-none"}`}>
                 {navOpenButton}
             </div>
-            <div className="breadcrumbs flex whitespace-nowrap scrollbar-hide md:overflow-hidden text-[0.6rem] md:text-xs">
-                <ul className="gap-0 [&>li]:-mx-[2px] [&>li]:px-0 [&>li]:before:mx-1.5 md:[&>li]:before:mx-4 [&>li]:first:before:mx-0 [&>li+li::before]:text-white [&>li+li::before]:opacity-100">
-                    {breadCrumbs.map((crumb, index) => (
-                        <li key={`${crumb.label}-${index}`} className={`flex items-center ${index == 0 && "before:mx-0"}`}>
-                            <div className={`flex items-center justify-center font-code breadcrumb-style ${crumb.isActive ? "btn-i-active" : "btn-i-inactive"}`}>
-                                {crumb.icon && <crumb.icon className={`icon ${crumb.isActive && "-mr-1.5"} md:m-0 ${crumb.iconColor ?? ""}`} />}
-                                <span className={`${crumb.isActive || "hidden"} md:block`}>{crumb.label}</span>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+
+            <div className={`hidden md:flex items-center gap-3 transition-all text-gray-400 uppercase text-xs tracking-widest border-solid border-r border-slate-700/40
+                            ${isNavOpenButtonVisible ? "px-4 mx-4 border-l" : "pr-2 mr-2 pl-0 ml-0"}`}>
+                <RiCodeSSlashFill className="text-lg"/>
+                Editor
             </div>
-            <span></span>
-            <div className="flex items-center text-sm">
-                <NavLink className="flex items-center btn-i-active" to={"/"}>
-                    <span className="hidden md:block mr-2">Change Workspace</span>
-                    <GoProjectSymlink className="icon" />
+
+            <div className="flex md:hidden h-4 pl-4 ml-4 border-l-1 border-slate-700/40"></div>
+
+            <div className="flex items-center gap-2">
+                {executeState == "stopped" ?
+                    <div className="flex btn-i-active" onClick={onExecuteRun}>
+                        <PlayIcon label={"Execute"} />
+                    </div>
+                    : executeState == "running" ?
+                        <div className="btn-i-active" onClick={onExecuteStop}>
+                            <StopIcon label={executeState} />
+                        </div>
+                        :
+                        <div className="btn-i-inactive">
+                            <LoadingIcon label={executeState} />
+                        </div>
+                }
+            </div>
+
+            <div className="font-code w-fit mr-2 text-gray-400 px-0 py-1 shadow-[inset_0_0_10px_black] rounded-lg max-md:opacity-50">
+                {openedFile &&
+                    <div className="flex items-center px-2 text-xs md:text-[13px]">
+                        {openedFile.label}
+                        <openedFile.icon className={`ml-2 ${openedFile.color}`}/>
+                    </div>
+                }
+            </div>
+
+            <div className="flex items-center">
+                <NavLink className="flex items-center text-error btn-i-active" to={"/"}>
+                    <span className="hidden md:block mr-2 text-xs uppercase tracking-widest font-bold">Switch</span>
+                    <GoProjectSymlink className="icon"/>
                 </NavLink>
             </div>
         </div>

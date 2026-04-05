@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useProject } from "./ide/ProfileProvider.tsx";
+import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+import {useProject} from "./ide/ProfileProvider.tsx";
 
 const ProfileSelectionTemp = () => {
     const [route, setRoute] = useState("software-dev");
     const navigate = useNavigate();
-    const { setProject } = useProject();
+    const {setProject} = useProject();
 
     const handleNavigate = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();

@@ -1,10 +1,12 @@
-import {BiLogoGithub} from "react-icons/bi";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {useProject} from "./ProfileProvider.tsx";
 import {Icon} from "@iconify/react";
 import useGithubStatus from "./githubStatus.ts";
 import {IoGitCommit} from "react-icons/io5";
-import {MdArrowRight, MdDoubleArrow, MdOutlineReadMore} from "react-icons/md";
+import {IconType} from "react-icons";
+import {useLocation} from "react-router-dom";
+import {getActiveNavItem} from "./nav/navConfig.ts";
+import {VscGithubProject, VscPackage} from "react-icons/vsc";
 
 interface StatusBarItem {
     label?: string;
@@ -12,15 +14,25 @@ interface StatusBarItem {
     isDesktopOnly?: boolean;
 }
 
-const textItems: StatusBarItem[] = [
-    { value: <>⚡ Wissen Technology Intern • Joining Full-Time</> },
-    { value: <>📍India • Remote</> },
-    { value: <span className="flex items-center gap-1"><Icon icon="logos:react"/>REACT •<Icon icon="logos:vitejs"/> VITE •<Icon icon="logos:typescript-icon"/> TS</span> },
-];
+interface BreadCrumb {
+    icon?: IconType | null;
+    iconColor?: string;
+    label: string;
+    isActive?: boolean;
+}
 
+// note - later might remove some
+const textItems: StatusBarItem[] = [
+    {value: <>⚡ Wissen Technology Intern • Joining Full-Time</>},
+    {value: <>📍India • Remote</>},
+    {
+        value: <span className="flex items-center gap-1"><Icon icon="logos:react"/>REACT •<Icon icon="logos:vitejs"/> VITE •<Icon
+            icon="logos:typescript-icon"/> TS</span>
+    },
+];
 const dynamicItems: StatusBarItem[] = [
-    { label: "work_title" },
-    { label: "github_last_commit" },
+    {label: "work_title"},
+    {label: "github_last_commit"},
 ]
 
 interface FooterPaneProps {
@@ -28,40 +40,39 @@ interface FooterPaneProps {
 }
 
 const FooterPane = ({isMobile}: FooterPaneProps) => {
-    const scrollRef = useRef<HTMLDivElement | null>(null);
-    const [showMore, setShowMore] = useState(false);
-
     const [statusBarItems, setStatusBarItems] = useState<StatusBarItem[]>([]);
     const [cursorPosition, setCursorPosition] = useState<number[]>([0, 0]);
     const {project} = useProject();
 
     const github = useGithubStatus("AJ-316");
 
-    const updateScrollState = () => {
-        const el = scrollRef.current;
-        if (!el) return;
-
-        const isOverflowing = el.scrollWidth > el.clientWidth;
-        const isAtEnd =
-            el.scrollLeft + el.clientWidth >= el.scrollWidth - 5;
-
-        setShowMore(isOverflowing && !isAtEnd);
-    };
+    const location = useLocation();
+    const [breadCrumbs, setBreadCrumbs] = useState<BreadCrumb[]>([]);
 
     useEffect(() => {
-        const el = scrollRef.current;
-        if (!el) return;
+        const active = getActiveNavItem(location.pathname);
 
-        updateScrollState();
-
-        el.addEventListener("scroll", updateScrollState);
-        window.addEventListener("resize", updateScrollState);
-
-        return () => {
-            el.removeEventListener("scroll", updateScrollState);
-            window.removeEventListener("resize", updateScrollState);
-        };
-    }, [statusBarItems]);
+        setBreadCrumbs([
+            {
+                icon: VscGithubProject,
+                iconColor: "text-[#fff]",
+                label: "workspaces",
+                isActive: false,
+            },
+            ...(project ? [{
+                icon: VscPackage,
+                iconColor: "text-[#fff]",
+                label: project,
+                isActive: false,
+            }] : []),
+            ...(active ? [{
+                icon: active.icon,
+                iconColor: active.color,
+                label: active.label,
+                isActive: true,
+            }] : [])
+        ])
+    }, [project, location.pathname]);
 
     const formatTimeAgo = (date: string) => {
         const diff = Date.now() - new Date(date).getTime();
@@ -75,18 +86,20 @@ const FooterPane = ({isMobile}: FooterPaneProps) => {
 
     useEffect(() => {
         setStatusBarItems(prev => prev.map(item => {
-            if(item.label === "work_title") {
+            if (item.label === "work_title") {
                 return {
                     ...item,
                     value: project === "software-dev" ? <>⚡Systems Engineer</> : <>⚡ Indie Developer</>
                 }
             }
-            if(item.label === "github_last_commit") {
+            if (item.label === "github_last_commit") {
                 return {
                     ...item,
                     value: project === "software-dev" ?
                         <span className="flex items-center gap-1">
-                            <IoGitCommit className="w-4 h-4" /> Last Commit: {github ? formatTimeAgo(github.lastCommitDate) : <span className="loading w-4 h-4">.</span>}
+                            <IoGitCommit
+                                className="w-4 h-4"/> Last Commit: {github ? formatTimeAgo(github.lastCommitDate) :
+                            <span className="loading w-4 h-4">.</span>}
                         </span> : undefined
                 }
             }
@@ -95,7 +108,7 @@ const FooterPane = ({isMobile}: FooterPaneProps) => {
     }, [github, project]);
 
     useEffect(() => {
-        if(isMobile) return;
+        if (isMobile) return;
 
         const handlePointerMove = (e: PointerEvent) => {
             setCursorPosition([e.clientX, e.clientY]);
@@ -115,7 +128,7 @@ const FooterPane = ({isMobile}: FooterPaneProps) => {
     }, [isMobile]);
 
     useEffect(() => {
-        if(isMobile) return;
+        if (isMobile) return;
 
         setStatusBarItems(prev =>
             prev.map(item =>
@@ -126,9 +139,28 @@ const FooterPane = ({isMobile}: FooterPaneProps) => {
     }, [cursorPosition, isMobile]);
 
     return (
-        <div id="footer" className="grid grid-cols-[1fr_auto] items-center md:tracking-widest">
-            <div ref={scrollRef}
-                 className="flex justify-between whitespace-nowrap overflow-x-auto scrollbar-hide mr-2 md:gap-5">
+        <div id="footer" className="grid grid-cols-[auto_1fr_auto] items-center md:tracking-widest">
+            <div
+                className="breadcrumbs px-2 flex whitespace-nowrap scrollbar-hide md:overflow-hidden text-[0.6rem] md:text-xs">
+                <ul className="gap-0 [&>li]:-mx-[2px] [&>li]:px-0 [&>li]:before:mx-1.5 md:[&>li]:before:mx-4 [&>li]:first:before:mx-0 [&>li+li::before]:text-white [&>li+li::before]:opacity-100">
+                    {breadCrumbs.map((crumb, index) => (
+                        <li key={`${crumb.label}-${index}`}
+                            className={`flex items-center ${index == 0 && "before:mx-0"}`}>
+                            <div
+                                className={`flex items-center justify-center font-code breadcrumb-style ${crumb.isActive ? "btn-i-active" : "btn-i-inactive"}`}>
+                                {/* note - icons everywhere not needed
+                                {crumb.icon && <crumb.icon
+                                    className={`icon ${crumb.isActive && "-mr-1.5"} md:m-0 ${crumb.iconColor ?? ""}`}/>}*/}
+                                <span className={`${crumb.isActive || "block"} md:block`}>{crumb.label}</span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <div className="mx-5 text-gray-400 text-center font-bold">
+                <span className="hidden xl:block 2xl:hidden">Test</span>
+            </div>
+            <div className="min-[1800px]:flex hidden justify-start whitespace-nowrap overflow-x-auto mr-2 gap-2">
                 {statusBarItems.map((item, i) => (
                     item.value &&
                     <span
@@ -140,7 +172,7 @@ const FooterPane = ({isMobile}: FooterPaneProps) => {
                     </span>
                 ))}
             </div>
-            {showMore && (
+            {/*{showMore && (
                 <div
                     className="block md:hidden absolute left-full -translate-x-[150%] animate-[bounceAlt_3s_infinite]">
                     <MdDoubleArrow
@@ -158,7 +190,7 @@ const FooterPane = ({isMobile}: FooterPaneProps) => {
                         </defs>
                     </svg>
                 </div>
-            )}
+            )}*/}
 
             {/*<></>*/}
         </div>
